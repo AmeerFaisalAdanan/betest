@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Redis;
+use App\Models\DailyRecord;
 
 class RandomUserServices
 {
-
     public function createUser()
     {
         // $json = $this->randomUser();
@@ -48,6 +48,7 @@ class RandomUserServices
 
         $getCount = DB::table('users')
                     ->select(DB::raw('gender, COUNT(*) as count'))
+                    ->whereDate('created_at', '=', date('Y-m-d'))
                     ->groupBy('gender')
                     ->get();
 
@@ -60,14 +61,6 @@ class RandomUserServices
             ]
         ));
 
-        //retrieve record from redis
-        $record = $redis->get('hourly_record');
-
-        return response()->json([
-            'status' => true,
-            'data' => json_decode($record)
-        ]
-        );
     }
 
     public function eod(){
@@ -106,9 +99,12 @@ class RandomUserServices
 
         }
         else{
-
-            $maleUserCount = User::where('gender', 'male')->count();
-            $femaleUserCount = User::where('gender', 'female')->count();
+            $maleUserCount = User::whereDate('created_at', $today)
+                                    ->where('gender', 'male')
+                                    ->count();
+            $femaleUserCount = User::whereDate('created_at', $today)
+                                    ->where('gender', 'female')
+                                    ->count();
 
             if($maleUserCount != $malecount || $femaleUserCount != $femalecount){
                 
@@ -120,7 +116,7 @@ class RandomUserServices
                 $dailyCount->male_avg_age = round($maleAvgAge, 0);
                 $dailyCount->female_avg_age = round($femaleAvgAge, 0);
                 $dailyCount->save();
-
+                
             }
         }
 
