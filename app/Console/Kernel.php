@@ -23,7 +23,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $randomUserServices = new RandomUserServices();
             $randomUserServices->eod();
-        })->daily();
+        })
+        ->dailyAt('17:00');
+
 
     }
 
