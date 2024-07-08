@@ -5,17 +5,18 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 
+use App\Models\User;
+use DB;
+use Illuminate\Support\Facades\Redis;
+
 class RandomUserServices
 {
-    public function randomUser()
-    {
-        $response = Http::get('https://randomuser.me/api/?results=20');
-        return $response->json();
-    }
 
-    public function createUser(Request $request)
+    public function createUser()
     {
-        $json = $this->randomUser();
+        // $json = $this->randomUser();
+        $response = Http::get('https://randomuser.me/api/?results=20');
+        $json = $response->json();
 
         foreach ($json['results'] as $result) {
 
