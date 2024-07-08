@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('daily_records', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('male_count');
-            $table->string('female_count');
+            $table->integer('male_count');
+            $table->integer('female_count');
             $table->string('male_avg_age');
             $table->string('female_avg_age');
             $table->timestamps();

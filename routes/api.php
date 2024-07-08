@@ -2,8 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,13 +16,3 @@ use App\Http\Controllers\TestController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-// Route::get('/random-user', [TestControllerstore::class, 'randomUser']);
-
-
-Route::get('/create-user', [TestController::class, 'createUser']);
-
-Route::get('/daily-record', [TestController::class, 'dailyRecord']);
-
-Route::get('/check-key-exists', [TestController::class, 'checkKeyExists']);
