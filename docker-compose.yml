@@ -1,0 +1,65 @@
+services:
+
+  app:
+    build: 
+      context: .
+      dockerfile: ./docker/php/Dockerfile.php
+    volumes:
+      - .:/var/www/
+    container_name: beapp
+    working_dir: /var/www
+    networks:
+      - app-network
+
+
+  db:
+    image: postgres:15
+    container_name: beapp_db
+    restart: always
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  webserver:
+    image: nginx:alpine
+    container_name: beapp_webserver
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
+      - "443:443"
+    links:
+      - app
+    networks:
+      - app-network
+
+  redis-cache:
+    image: redis:latest
+    container_name: beapp-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+  cache:
+    driver: local
