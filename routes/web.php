@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\DailyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::resource('user', UserController::class);
+Route::resource('daily', DailyController::class);
+
+// Route::get('/user', [TestController::class, 'index'])->name('user.index');
+// Route::get('/user', [TestController::class, 'index'])->name('user.index');
+// Route::delete('/user/{id}', [TestController::class, 'destroy'])->name('user.destroy');
